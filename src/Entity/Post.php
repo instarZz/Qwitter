@@ -6,9 +6,13 @@ use App\Repository\PostRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\HttpFoundation\File\File;
+use Vich\UploaderBundle\Mapping\Annotation as Vich;
 
 /**
  * @ORM\Entity(repositoryClass=PostRepository::class)
+ * @ORM\HasLifecycleCallbacks()
+ * @Vich\Uploadable
  */
 class Post
 {
@@ -28,6 +32,13 @@ class Post
      * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $media;
+
+    /**
+     * @Vich\UploadableField(mapping="media", fileNameProperty="media")
+     *
+     * @var null|File
+     */
+    private $mediaFile;
 
     /**
      * @ORM\ManyToOne(targetEntity=User::class, inversedBy="posts")
@@ -168,6 +179,14 @@ class Post
         return $this;
     }
 
+    /**
+     * @ORM\PrePersist
+     */
+    public function setCreatedAtValue()
+    {
+        $this->createdAt = new \DateTime();
+    }
+
     public function getUpdatedAt(): ?\DateTimeInterface
     {
         return $this->updatedAt;
@@ -178,5 +197,38 @@ class Post
         $this->updatedAt = $updatedAt;
 
         return $this;
+    }
+
+    /**
+     * @ORM\PrePersist
+     * @ORM\PreUpdate
+     */
+    public function setUpdatedAtValue()
+    {
+        $this->updatedAt = new \DateTime();
+    }
+
+    /**
+     * Get the value of mediaFile.
+     *
+     * @return null|File
+     */
+    public function getMediaFile()
+    {
+        return $this->mediaFile;
+    }
+
+    /**
+     * @param null|File|\Symfony\Component\HttpFoundation\File\UploadedFile $mediaFile
+     */
+    public function setMediaFile(?File $mediaFile = null): void
+    {
+        $this->mediaFile = $mediaFile;
+
+        if (null !== $mediaFile) {
+            // It is required that at least one field changes if you are using doctrine
+            // otherwise the event listeners won't be called and the file is lost
+            $this->updatedAt = new \DateTimeImmutable();
+        }
     }
 }

@@ -1,0 +1,22 @@
+.container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    text-align: center;
+
+    height: auto;
+    p:first-child{
+        font-size: 36px;
+        color: white;
+    }
+
+    h1{
+        color: white;
+        font-size: 48px;
+    }
+
+    h1::first-letter{
+        color: #006e98;
+    }
+}

@@ -1,0 +1,15 @@
+{% extends "base.html.twig" %}
+
+{% block title %}{{ error }} - {{ message }}{% endblock %}
+
+{% block body %}
+    <div class="p-5 mb-4 bg-secondary rounded-3 mt-3">
+      <div class="container-fluid py-5">
+        <h1 class="display-5 fw-bold">{{error}}</h1>
+        <p class="col-md-8 fs-4">{{message}}</p>
+        <a href="{{ path('post_index') }}">
+            <button class="btn btn-secondary btn-lg" type="button">Back to posts</button>
+        </a>
+      </div>
+    </div>
+{% endblock %}
