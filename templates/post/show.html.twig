@@ -47,11 +47,21 @@
         No one liked this post yet. Be the first one to like it !        
     {% endfor %}
     </p>
-    <a href="{{path('post_like', {'id':post.id})}}">
-        <button class="btn btn-primary">Like this post</button>
+
+    {% if app.user in post.likes %}
+        <a href="{{path('post_like', {'id':post.id})}}">
+            <button class="btn btn-danger">Unlike this post</button>
+        </a><br>
+    {% else %}
+        <a href="{{path('post_like', {'id':post.id})}}">
+            <button class="btn btn-primary">Like this post</button>
+        </a>
+    {% endif %}
+
+    <a href="{{path('post_index', {'id':post.id})}}">
+        <button class="btn btn-secondary btn-small">Back to list !</button>
     </a>
 
-    <a href="{{ path('post_index') }}">back to list</a>
     {% if app.user is same as(post.author) %}
     <a href="{{ path('post_edit', {'id': post.id}) }}">edit</a>
     {{ include('post/_delete_form.html.twig') }}
